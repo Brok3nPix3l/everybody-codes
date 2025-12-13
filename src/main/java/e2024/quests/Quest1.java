@@ -2,8 +2,6 @@ package e2024.quests;
 
 import java.util.List;
 
-import utils.StringUtils;
-
 public class Quest1 extends Quest {
 
     @Override
