@@ -9,21 +9,21 @@ import utils.StringUtils;
 public class QuestTemplate extends Quest {
 
     @Override
-    public long part1(String input, boolean debug) {
+    public long part1(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
         return ans;
     }
 
     @Override
-    public long part2(String input, boolean debug) {
+    public long part2(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
         return ans;
     }
 
     @Override
-    public long part3(String input, boolean debug) {
+    public long part3(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
         return ans;

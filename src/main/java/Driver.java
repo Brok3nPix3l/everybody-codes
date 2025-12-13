@@ -26,7 +26,6 @@ public class Driver {
         int part = Integer.parseInt(properties.getProperty("part"));
         String fileSuffix = Optional.ofNullable(properties.getProperty("fileSuffix")).orElse("");
         boolean profile = Boolean.parseBoolean(properties.getProperty("profile"));
-        boolean debug = Boolean.parseBoolean(properties.getProperty("debug"));
 
         Quest quest;
         try {
@@ -50,12 +49,12 @@ public class Driver {
             }
             if (profile) {
                 long startTime = System.nanoTime();
-                runMethod(input, debug, quest, part);
+                runMethod(input, quest, part);
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime) / 1_000_000;
                 System.out.println("Execution time: " + duration + "ms");
             } else {
-                runMethod(input, debug, quest, part);
+                runMethod(input, quest, part);
             }
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                  InstantiationException ex) {
@@ -63,10 +62,10 @@ public class Driver {
         }
     }
 
-    private static void runMethod(String input, boolean debug, Quest quest, int part)
+    private static void runMethod(String input, Quest quest, int part)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Method partMethod = quest.getClass().getMethod("part" + part, String.class, boolean.class);
-        System.out.println(partMethod.invoke(quest, input, debug));
+        Method partMethod = quest.getClass().getMethod("part" + part, String.class);
+        System.out.println(partMethod.invoke(quest, input));
     }
 
     private static Properties parseArgs(String[] args) {
