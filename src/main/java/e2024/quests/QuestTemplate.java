@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 import e2024.quests.Quest;
-import main.java.utils.StringUtils;
+import utils.StringUtils;
 
 public class QuestTemplate extends Quest {
 

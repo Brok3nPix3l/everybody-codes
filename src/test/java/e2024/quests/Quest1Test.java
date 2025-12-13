@@ -14,6 +14,6 @@ class Quest1Test {
 
     @Test
     void part1Test() {
-        Assertions.assertEquals(5, quest.part1("abc", false));
+        Assertions.assertEquals(5, quest.part1("ABBAC", false));
     }
 }

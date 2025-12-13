@@ -1,15 +1,27 @@
 package e2024.quests;
 
-import main.java.utils.StringUtils;
-
 import java.util.List;
+
+import utils.StringUtils;
 
 public class Quest1 extends Quest {
 
     @Override
     public long part1(String input, boolean debug) {
         long ans = 0L;
-        List<String> lines = StringUtils.splitInput(input);
+        if (debug) {
+            System.out.println(input);
+        }
+        for (char c: input.toCharArray()) {
+            switch (c) {
+                case 'B':
+                    ans++;
+                    break;
+                case 'C':
+                    ans += 3;
+                    break;
+            }
+        }
         return ans;
     }
 
