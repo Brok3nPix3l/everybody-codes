@@ -1,56 +1,31 @@
-package main.java.e2024.quests;
+package e2024.quests;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
+import e2024.quests.Quest;
+import main.java.utils.StringUtils;
 
 public class QuestTemplate extends Quest {
-    public QuestTemplate(File notes) throws FileNotFoundException {
-        super(notes);
+
+    @Override
+    public long part1(String input, boolean debug) {
+        long ans = 0L;
+        List<String> lines = StringUtils.splitInput(input);
+        return ans;
     }
 
     @Override
-    public long Part1(boolean debug) throws FileNotFoundException {
-        throw new RuntimeException("Not implemented yet");
-//        long ans = 0L;
-//        try (Scanner scanner = new Scanner(notes)) {
-//            while (scanner.hasNextLine()) {
-//                String line = scanner.nextLine();
-//                if (debug) {
-//                    System.out.println(line);
-//                }
-//            }
-//        }
-//        return ans;
+    public long part2(String input, boolean debug) {
+        long ans = 0L;
+        List<String> lines = StringUtils.splitInput(input);
+        return ans;
     }
 
     @Override
-    public long Part2(boolean debug) throws FileNotFoundException {
-        throw new RuntimeException("Not implemented yet");
-//        long ans = 0L;
-//        try (Scanner scanner = new Scanner(notes)) {
-//            while (scanner.hasNextLine()) {
-//                String line = scanner.nextLine();
-//                if (debug) {
-//                    System.out.println(line);
-//                }
-//            }
-//        }
-//        return ans;
-    }
-
-    @Override
-    public long Part3(boolean debug) throws FileNotFoundException {
-        throw new RuntimeException("Not implemented yet");
-//        long ans = 0L;
-//        try (Scanner scanner = new Scanner(notes)) {
-//            while (scanner.hasNextLine()) {
-//                String line = scanner.nextLine();
-//                if (debug) {
-//                    System.out.println(line);
-//                }
-//            }
-//        }
-//        return ans;
+    public long part3(String input, boolean debug) {
+        long ans = 0L;
+        List<String> lines = StringUtils.splitInput(input);
+        return ans;
     }
 }

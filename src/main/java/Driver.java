@@ -1,15 +1,14 @@
-package main.java;
-
-import main.java.e2024.quests.Quest;
+import e2024.quests.Quest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 public class Driver {
     public static void main(String[] args) throws ClassNotFoundException {
@@ -36,23 +35,38 @@ public class Driver {
             Class<?> dayClass = Class.forName(className);
             Constructor<?> constructor;
             try {
-                constructor = dayClass.getConstructor(File.class);
+                constructor = dayClass.getConstructor();
             } catch (NoSuchMethodException ex) {
                 throw new RuntimeException(ex);
             }
+            quest = (Quest) constructor.newInstance();
             Path filePath = Path.of(String.format("e%s", year), "quests",
                     String.format("everybody_codes_e%d_q%02d_p%d%s.txt", year, questNumber, part, fileSuffix));
-            File inputFile =
-                    new File(Objects.requireNonNull(Driver.class.getResource("/" + filePath.toString().replace("\\", "/"))).getFile());
-            quest = (Quest) constructor.newInstance(inputFile);
+            File inputFile = new File(
+                    Objects.requireNonNull(Driver.class.getResource("/" + filePath.toString().replace("\\", "/")))
+                            .getFile());
+            String input;
+            try (InputStream inputstream = Driver.class.getResourceAsStream(
+                    filePath.toString().replace("\\", "/"))) {
+                input = Arrays.toString(Objects.requireNonNull(inputstream).readAllBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+//            StringBuilder sb = new StringBuilder();
+//            try (Scanner scanner = new Scanner(inputFile)) {
+//                scanner.
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
             if (profile) {
                 long startTime = System.nanoTime();
-                runMethod(debug, quest, part);
+                runMethod(input, debug, quest, part);
                 long endTime = System.nanoTime();
                 long duration = (endTime - startTime) / 1_000_000;
                 System.out.println("Execution time: " + duration + "ms");
             } else {
-                runMethod(debug, quest, part);
+                runMethod(input, debug, quest, part);
             }
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException |
                  InstantiationException ex) {
@@ -60,10 +74,10 @@ public class Driver {
         }
     }
 
-    private static void runMethod(boolean debug, Quest quest, int part)
+    private static void runMethod(String input, boolean debug, Quest quest, int part)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Method partMethod = quest.getClass().getMethod("Part" + part, boolean.class);
-        System.out.println(partMethod.invoke(quest, debug));
+        Method partMethod = quest.getClass().getMethod("Part" + part, String.class, boolean.class);
+        System.out.println(partMethod.invoke(quest, input, debug));
     }
 
     private static Properties parseArgs(String[] args) {
