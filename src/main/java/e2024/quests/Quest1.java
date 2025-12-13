@@ -51,7 +51,22 @@ public class Quest1 extends Quest {
     @Override
     public long part3(String input) {
         long ans = 0L;
-        List<String> lines = StringUtils.splitInput(input);
+        for (int i = 0; i < input.length(); i += 3) {
+            long localPotionCount = 0L;
+            int localCreatureCount = 0;
+            for (char c : List.of(input.charAt(i), input.charAt(i + 1), input.charAt(i + 2))) {
+                localPotionCount += getPotionsRequiredForCreature(c);
+                if (isCreature(c)) {
+                    localCreatureCount++;
+                }
+            }
+            ans += localPotionCount;
+            if (localCreatureCount == 3) {
+                ans += 6;
+            } else if (localCreatureCount == 2) {
+                ans += 2;
+            }
+        }
         return ans;
     }
 }

@@ -26,4 +26,9 @@ class Quest1Test {
         Assertions.assertEquals(5, quest.part2("CA"));
         Assertions.assertEquals(5, quest.part2("xD"));
     }
+
+    @Test
+    void part3Test() {
+        Assertions.assertEquals(30, quest.part3("xBxAAABCDxCC"));
+    }
 }
