@@ -23,7 +23,12 @@ class Quest2Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2(""));
+        String words = "WORDS:THE,OWE,MES,ROD,HER,QAQ";
+        Assertions.assertEquals(15, quest.part2(words + "\n\n" + "AWAKEN THE POWER ADORNED WITH THE FLAMES BRIGHT IRE"));
+        Assertions.assertEquals(9, quest.part2(words + "\n\n" + "THE FLAME SHIELDED THE HEART OF THE KINGS"));
+        Assertions.assertEquals(6, quest.part2(words + "\n\n" + "POWE PO WER P OWE R"));
+        Assertions.assertEquals(7, quest.part2(words + "\n\n" + "THERE IS THE END"));
+        Assertions.assertEquals(5, quest.part2(words + "\n\n" + "QAQAQ"));
     }
 
     @Test
