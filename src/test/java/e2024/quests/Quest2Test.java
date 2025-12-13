@@ -33,6 +33,11 @@ class Quest2Test {
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3(""));
+        Assertions.assertEquals(10, quest.part3(
+                "WORDS:THE,OWE,MES,ROD,RODEO\n" +
+                "\n" +
+                "HELWORLT\n" +
+                "ENIGWDXL\n" +
+                "TRODEOAL"));
     }
 }
