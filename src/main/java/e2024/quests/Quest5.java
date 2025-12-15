@@ -21,8 +21,8 @@ public class Quest5 extends Quest {
         return firstPersonInEachColumnNumber(columns);
     }
 
-    private long firstPersonInEachColumnNumber(Map<Integer, List<Integer>> columns) {
-        long ans = 0L;
+    private int firstPersonInEachColumnNumber(Map<Integer, List<Integer>> columns) {
+        int ans = 0;
         for (List<Integer> list : columns.values()) {
             ans *= 10;
             ans += list.getFirst();
@@ -30,43 +30,39 @@ public class Quest5 extends Quest {
         return ans;
     }
 
-    private void performRound(Map<Integer, List<Integer>> columns, int clapperColumnIndex) {
+    public void performRound(Map<Integer, List<Integer>> columns, int clapperColumnIndex) {
         int clapperNumber = columns.get(clapperColumnIndex).removeFirst();
         int targetColumnNumber = (clapperColumnIndex + 1) % columns.size();
         List<Integer> targetColumn = columns.get(targetColumnNumber);
-        int insertionIndex = -1;
-        for (int i = 0; i < clapperNumber; i++) {
-            if (insertionIndex < targetColumn.size()) {
-                insertionIndex++;
-            } else {
-                insertionIndex--;
-            }
-        }
-        targetColumn.add(insertionIndex, clapperNumber);
-        // for targetColumn.size() == 5
+        // for targetColumn.size() == 2
         // clapperNumber    | insertion index
         //------------------+-----------------
         // 1                | 0
         // 2                | 1
         // 3                | 2
-        // 4                | 3
-        // 5                | 4
-        // 6                | 5
-        // 7                | 4
-        // 8                | 3
-        // 9                | 2
+        // 4                | 1
+        // 5                | 0
+        // 6                | 1
+        // 7                | 2
+        // 8                | 1
+        // 9                | 0
         // 10               | 1
-//        if (clapperNumber <= targetColumn.size() + 1) {
-//            // insert after target element
-//            targetColumn.add(clapperNumber - 1, clapperNumber);
-//        } else {
-//            // insert before target element
-//            targetColumn.add(clapperNumber - (clapperNumber - targetColumn.size() + 1), clapperNumber);
-//        }
-         // System.out.println(columns);
+
+        // targetColumn.size() * 2 - 1 unique positions
+        // 0, 1, 2, 3, 4, 5, 4, 3, 2, and 1
+        int insertionIndex;
+        int clapperNumberMod = (clapperNumber - 1) % (targetColumn.size() * 2) + 1;
+        if (clapperNumberMod <= targetColumn.size()) {
+            // insert after target element
+            insertionIndex = clapperNumberMod - 1;
+        } else {
+            // insert before target element
+            insertionIndex = targetColumn.size() * 2 - (clapperNumberMod) + 1;
+        }
+        targetColumn.add(insertionIndex, clapperNumber);
     }
 
-    private Map<Integer, List<Integer>> generateColumns(List<String> lines) {
+    public Map<Integer, List<Integer>> generateColumns(List<String> lines) {
         Map<Integer, List<Integer>> columns = new HashMap<>();
         for (String line : lines) {
             String[] parts = line.split(" ");
@@ -84,9 +80,26 @@ public class Quest5 extends Quest {
 
     @Override
     public long part2(String input) {
-        long ans = 0L;
+        return performRoundsUntilANumberIsShoutedTimes(input, 2024);
+    }
+
+    private long performRoundsUntilANumberIsShoutedTimes(String input, int shoutTimes) {
         List<String> lines = StringUtils.splitInput(input);
-        return ans;
+        Map<Integer, List<Integer>> columns = generateColumns(lines);
+        Map<Integer, Integer> timesShouted = new HashMap<>();
+        int maxTimesShouted = 0;
+        int clapperColumnIndex = 0;
+        long roundCount = 0L;
+        // System.out.println("Performing " + roundCount + " round(s)");
+         while (maxTimesShouted < shoutTimes) {
+            performRound(columns, clapperColumnIndex);
+            clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+            int numberShouted = firstPersonInEachColumnNumber(columns);
+            timesShouted.put(numberShouted, timesShouted.getOrDefault(numberShouted, 0) + 1);
+            maxTimesShouted = Math.max(timesShouted.get(numberShouted), maxTimesShouted);
+            roundCount++;
+        }
+        return firstPersonInEachColumnNumber(columns) * roundCount;
     }
 
     @Override

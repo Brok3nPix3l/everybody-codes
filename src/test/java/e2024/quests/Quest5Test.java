@@ -3,6 +3,13 @@ package e2024.quests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import utils.StringUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Quest5Test {
     static Quest quest;
@@ -15,57 +22,57 @@ class Quest5Test {
     @Test
     void part1Test() {
         Quest5 quest5 = new Quest5();
-        Assertions.assertEquals(3345, quest5.performRounds("""
+        assertEquals(3345, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 1));
-        Assertions.assertEquals(3245, quest5.performRounds("""
+        assertEquals(3245, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 2));
-        Assertions.assertEquals(3255, quest5.performRounds("""
+        assertEquals(3255, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 3));
-        Assertions.assertEquals(3252, quest5.performRounds("""
+        assertEquals(3252, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 4));
-        Assertions.assertEquals(4252, quest5.performRounds("""
+        assertEquals(4252, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 5));
-        Assertions.assertEquals(4452, quest5.performRounds("""
+        assertEquals(4452, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 6));
-        Assertions.assertEquals(4422, quest5.performRounds("""
+        assertEquals(4422, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 7));
-        Assertions.assertEquals(4423, quest5.performRounds("""
+        assertEquals(4423, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 8));
-        Assertions.assertEquals(2423, quest5.performRounds("""
+        assertEquals(2423, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 9));
-        Assertions.assertEquals(2323, quest5.performRounds("""
+        assertEquals(2323, quest5.performRounds("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 10));
-        Assertions.assertEquals(2323, quest.part1("""
+        assertEquals(2323, quest.part1("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
@@ -74,13 +81,95 @@ class Quest5Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2("""
-                """));
+        Quest5 quest5 = new Quest5();
+        String input = """
+                2 3 4 5
+                6 7 8 9""";
+        List<String> lines = StringUtils.splitInput(input);
+        Map<Integer, List<Integer>> columns = quest5.generateColumns(lines);
+        int clapperColumnIndex = 0;
+
+        quest5.performRound(columns, clapperColumnIndex);
+        Map<Integer,List<Integer>> expectedMap = new HashMap<>();
+        expectedMap.put(0, List.of(6));
+        expectedMap.put(1, List.of(3, 2, 7));
+        expectedMap.put(2, List.of(4, 8));
+        expectedMap.put(3, List.of(5, 9));
+        assertEquals(expectedMap, columns);
+
+        clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+        quest5.performRound(columns, clapperColumnIndex);
+        expectedMap.clear();
+        expectedMap.put(0, List.of(6));
+        expectedMap.put(1, List.of(2, 7));
+        expectedMap.put(2, List.of(4, 8, 3));
+        expectedMap.put(3, List.of(5, 9));
+        assertEquals(expectedMap, columns);
+
+        clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+        quest5.performRound(columns, clapperColumnIndex);
+        expectedMap.clear();
+        expectedMap.put(0, List.of(6));
+        expectedMap.put(1, List.of(2, 7));
+        expectedMap.put(2, List.of(8, 3));
+        expectedMap.put(3, List.of(5, 4, 9));
+        assertEquals(expectedMap, columns);
+
+        clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+        quest5.performRound(columns, clapperColumnIndex);
+        expectedMap.clear();
+        expectedMap.put(0, List.of(5, 6));
+        expectedMap.put(1, List.of(2, 7));
+        expectedMap.put(2, List.of(8, 3));
+        expectedMap.put(3, List.of(4, 9));
+        assertEquals(expectedMap, columns);
+
+        clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+        quest5.performRound(columns, clapperColumnIndex);
+        expectedMap.clear();
+        expectedMap.put(0, List.of(6));
+        expectedMap.put(1, List.of(5, 2, 7));
+        expectedMap.put(2, List.of(8, 3));
+        expectedMap.put(3, List.of(4, 9));
+        assertEquals(expectedMap, columns);
+//        Assertions.assertEquals(6345, quest5.performRounds("""
+//                2 3 4 5
+//                6 7 8 9""", 1));
+//        Assertions.assertEquals(6245, quest5.performRounds("""
+//                2 3 4 5
+//                6 7 8 9""", 2));
+//        Assertions.assertEquals(6285, quest5.performRounds("""
+//                2 3 4 5
+//                6 7 8 9""", 3));
+//        Assertions.assertEquals(5284, quest5.performRounds("""
+//                2 3 4 5
+//                6 7 8 9""", 4));
+        assertEquals(6584, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 5));
+        assertEquals(6254, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 6));
+        assertEquals(6285, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 7));
+        assertEquals(5284, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 8));
+        assertEquals(6584, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 9));
+        assertEquals(6254, quest5.performRounds("""
+                2 3 4 5
+                6 7 8 9""", 10));
+        assertEquals(50877075, quest.part2("""
+                2 3 4 5
+                6 7 8 9"""));
     }
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3("""
+        assertEquals(0, quest.part3("""
                 """));
     }
 }
