@@ -10,7 +10,7 @@ public class Quest5 extends Quest {
         List<String> lines = StringUtils.splitInput(input);
         Map<Integer, List<Integer>> columns = generateColumns(lines);
         int clapperColumnIndex = 0;
-         // System.out.println("Performing " + roundCount + " round(s)");
+        // System.out.println("Performing " + roundCount + " round(s)");
         for (int i = 0; i < roundCount; i++) {
             performRound(columns, clapperColumnIndex);
             clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
@@ -18,12 +18,12 @@ public class Quest5 extends Quest {
         return firstPersonInEachColumnNumber(columns);
     }
 
-    private int firstPersonInEachColumnNumber(Map<Integer, List<Integer>> columns) {
+    private long firstPersonInEachColumnNumber(Map<Integer, List<Integer>> columns) {
         List<String> firstNumbers = new ArrayList<>();
         for (List<Integer> list : columns.values()) {
             firstNumbers.add(String.valueOf(list.getFirst()));
         }
-        return Integer.parseInt(String.join("", firstNumbers));
+        return Long.parseLong(String.join("", firstNumbers));
     }
 
     public void performRound(Map<Integer, List<Integer>> columns, int clapperColumnIndex) {
@@ -82,13 +82,13 @@ public class Quest5 extends Quest {
     private long performRoundsUntilANumberIsShoutedTimes(String input, int shoutTimes) {
         List<String> lines = StringUtils.splitInput(input);
         Map<Integer, List<Integer>> columns = generateColumns(lines);
-        Map<Integer, Integer> timesShouted = new HashMap<>();
+        Map<Long, Integer> timesShouted = new HashMap<>();
         int maxTimesShouted = 0;
         int clapperColumnIndex = 0;
         long roundCount = 0L;
-        int numberShouted = 0;
+        long numberShouted = 0;
         // System.out.println("Performing " + roundCount + " round(s)");
-         while (maxTimesShouted < shoutTimes) {
+        while (maxTimesShouted < shoutTimes) {
             performRound(columns, clapperColumnIndex);
             clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
             numberShouted = firstPersonInEachColumnNumber(columns);
@@ -96,14 +96,35 @@ public class Quest5 extends Quest {
             maxTimesShouted = Math.max(timesShouted.get(numberShouted), maxTimesShouted);
             roundCount++;
         }
-//        System.out.println(timesShouted.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).toList());
+//        System.out.println(timesShouted.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator
+//        .reverseOrder())).toList());
         return numberShouted * roundCount;
     }
 
     @Override
     public long part3(String input) {
-        long ans = 0L;
+        return maxNumberShoutedWhilePerformRoundsForever(input);
+    }
+
+    private long maxNumberShoutedWhilePerformRoundsForever(String input) {
+        Set<Long> seenShoutedNumbers = new HashSet<>();
         List<String> lines = StringUtils.splitInput(input);
-        return ans;
+        Map<Integer, List<Integer>> columns = generateColumns(lines);
+        int clapperColumnIndex = 0;
+        int roundCount = 0;
+        long maxNumberShouted = Long.MIN_VALUE;
+        for (int i = 0; i < 50000; i++) {
+            performRound(columns, clapperColumnIndex);
+            clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
+            long numberShouted = firstPersonInEachColumnNumber(columns);
+            if (!seenShoutedNumbers.contains(numberShouted)) {
+                System.out.println(
+                        "on round " + roundCount + " " + numberShouted + " was shouted for the first time");
+                seenShoutedNumbers.add(numberShouted);
+                maxNumberShouted = Math.max(maxNumberShouted, numberShouted);
+            }
+            roundCount++;
+        }
+        return maxNumberShouted;
     }
 }

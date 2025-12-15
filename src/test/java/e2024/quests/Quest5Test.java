@@ -169,7 +169,8 @@ class Quest5Test {
 
     @Test
     void part3Test() {
-        assertEquals(0, quest.part3("""
-                """));
+        assertEquals(6584, quest.part3("""
+                2 3 4 5
+                6 7 8 9"""));
     }
 }
