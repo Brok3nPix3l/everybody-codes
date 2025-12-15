@@ -2,10 +2,7 @@ package e2024.quests;
 
 import utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Quest5 extends Quest {
 
@@ -22,12 +19,11 @@ public class Quest5 extends Quest {
     }
 
     private int firstPersonInEachColumnNumber(Map<Integer, List<Integer>> columns) {
-        int ans = 0;
+        List<String> firstNumbers = new ArrayList<>();
         for (List<Integer> list : columns.values()) {
-            ans *= 10;
-            ans += list.getFirst();
+            firstNumbers.add(String.valueOf(list.getFirst()));
         }
-        return ans;
+        return Integer.parseInt(String.join("", firstNumbers));
     }
 
     public void performRound(Map<Integer, List<Integer>> columns, int clapperColumnIndex) {
@@ -90,16 +86,18 @@ public class Quest5 extends Quest {
         int maxTimesShouted = 0;
         int clapperColumnIndex = 0;
         long roundCount = 0L;
+        int numberShouted = 0;
         // System.out.println("Performing " + roundCount + " round(s)");
          while (maxTimesShouted < shoutTimes) {
             performRound(columns, clapperColumnIndex);
             clapperColumnIndex = (clapperColumnIndex + 1) % columns.size();
-            int numberShouted = firstPersonInEachColumnNumber(columns);
+            numberShouted = firstPersonInEachColumnNumber(columns);
             timesShouted.put(numberShouted, timesShouted.getOrDefault(numberShouted, 0) + 1);
             maxTimesShouted = Math.max(timesShouted.get(numberShouted), maxTimesShouted);
             roundCount++;
         }
-        return firstPersonInEachColumnNumber(columns) * roundCount;
+//        System.out.println(timesShouted.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).toList());
+        return numberShouted * roundCount;
     }
 
     @Override
