@@ -23,7 +23,11 @@ class Quest4Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2(""));
+        Assertions.assertEquals(10, quest.part2("""
+                3
+                4
+                7
+                8"""));
     }
 
     @Test

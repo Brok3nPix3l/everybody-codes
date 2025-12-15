@@ -24,6 +24,13 @@ public class Quest4 extends Quest {
     public long part2(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
+        long min = Long.MAX_VALUE;
+        for (String line : lines) {
+            min = Math.min(min, Long.parseLong(line));
+        }
+        for (String line : lines) {
+            ans += Long.parseLong(line) - min;
+        }
         return ans;
     }
 
