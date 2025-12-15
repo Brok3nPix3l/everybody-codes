@@ -14,16 +14,19 @@ class QuestTestTemplate {
 
     @Test
     void part1Test() {
-        Assertions.assertEquals(0, quest.part1(""));
+        Assertions.assertEquals(0, quest.part1("""
+                """));
     }
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2(""));
+        Assertions.assertEquals(0, quest.part2("""
+                """));
     }
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3(""));
+        Assertions.assertEquals(0, quest.part3("""
+                """));
     }
 }
