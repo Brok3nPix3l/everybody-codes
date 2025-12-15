@@ -32,6 +32,11 @@ class Quest4Test {
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3(""));
+        Assertions.assertEquals(8, quest.part3("""
+                2
+                4
+                5
+                6
+                8"""));
     }
 }
