@@ -36,16 +36,17 @@ public class Quest4 extends Quest {
 
     @Override
     public long part3(String input) {
-        long ans = Long.MAX_VALUE;
+        long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
-        MinAndMaxValues minAndMaxValues = determineMinAndMaxValues(lines);
-        long l = minAndMaxValues.min(), r = minAndMaxValues.max();
-        for (long target = l; target <= r; target++) {
-            long curStrikesRequiredToReachTargetHeight = 0L;
-            for (String line : lines) {
-                curStrikesRequiredToReachTargetHeight += Math.abs(Long.parseLong(line) - target);
-            }
-            ans = Math.min(ans, curStrikesRequiredToReachTargetHeight);
+        List<Long> sorted = lines.stream().map(Long::parseLong).sorted().toList();
+        ans = computeStrikesRequiredToReachTargetHeight(sorted.get(sorted.size() / 2), sorted);
+        return ans;
+    }
+
+    private long computeStrikesRequiredToReachTargetHeight(long target, List<Long> numbers) {
+        long ans = 0L;
+        for (Long number : numbers) {
+            ans += Math.abs(number - target);
         }
         return ans;
     }
