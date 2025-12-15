@@ -20,11 +20,13 @@ class Quest3Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2(""));
+        Assertions.assertEquals(35, quest.part2("..........\n" + "..###.##..\n" + "...####...\n" + "..######..\n" +
+                "..######..\n" + "...####...\n" + ".........."));
     }
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3(""));
+        Assertions.assertEquals(29, quest.part3("..........\n" + "..###.##..\n" + "...####...\n" +
+                "..######..\n" + "..######..\n" + "...####...\n" + ".........."));
     }
 }
