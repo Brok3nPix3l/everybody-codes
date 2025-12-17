@@ -5,16 +5,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class Quest6Test {
-    static Quest6 quest6;
+    static QuestString questString;
 
     @BeforeAll
     public static void setUpClass() {
-        quest6 = new Quest6();
+        questString = new Quest6();
     }
 
     @Test
     void part1Test() {
-        Assertions.assertEquals("RRB@", quest6.part1("""
+        Assertions.assertEquals("RRB@", questString.part1("""
                 RR:A,B,C
                 A:D,E
                 B:F,@
@@ -29,13 +29,22 @@ class Quest6Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest6.part2("""
+        Assertions.assertEquals("RB@", questString.part2("""
+                RR:A,B,C
+                A:D,E
+                B:F,@
+                C:G,H
+                D:@
+                E:@
+                F:@
+                G:@
+                H:@
                 """));
     }
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest6.part3("""
+        Assertions.assertEquals(0, questString.part3("""
                 """));
     }
 }

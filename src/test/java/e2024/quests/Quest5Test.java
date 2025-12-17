@@ -12,11 +12,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Quest5Test {
-    static Quest quest;
+    static QuestLong questLong;
 
     @BeforeAll
     public static void setUpClass() {
-        quest = new Quest5();
+        questLong = new Quest5();
     }
 
     @Test
@@ -72,7 +72,7 @@ class Quest5Test {
                 3 4 5 2
                 4 5 2 3
                 5 2 3 4""", 10));
-        assertEquals(2323, quest.part1("""
+        assertEquals(2323, questLong.part1("""
                 2 3 4 5
                 3 4 5 2
                 4 5 2 3
@@ -162,14 +162,14 @@ class Quest5Test {
         assertEquals(6254, quest5.performRounds("""
                 2 3 4 5
                 6 7 8 9""", 10));
-        assertEquals(50877075, quest.part2("""
+        assertEquals(50877075, questLong.part2("""
                 2 3 4 5
                 6 7 8 9"""));
     }
 
     @Test
     void part3Test() {
-        assertEquals(6584, quest.part3("""
+        assertEquals(6584, questLong.part3("""
                 2 3 4 5
                 6 7 8 9"""));
     }

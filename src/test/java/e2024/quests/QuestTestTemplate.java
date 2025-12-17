@@ -5,28 +5,28 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class QuestTestTemplate {
-    static Quest quest;
+    static QuestLong questLong;
 
     @BeforeAll
     public static void setUpClass() {
-//        quest = new Quest();
+//        questLong = new Quest();
     }
 
     @Test
     void part1Test() {
-        Assertions.assertEquals(0, quest.part1("""
+        Assertions.assertEquals(0, questLong.part1("""
                 """));
     }
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, quest.part2("""
+        Assertions.assertEquals(0, questLong.part2("""
                 """));
     }
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, quest.part3("""
+        Assertions.assertEquals(0, questLong.part3("""
                 """));
     }
 }
