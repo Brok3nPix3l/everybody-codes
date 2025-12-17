@@ -85,6 +85,27 @@ public class Quest6 extends QuestString {
         return path;
     }
 
+    private Optional<List<String>> computePathToRootAsListAvoidingPestsFrom(String currentNode, List<String> pathToRoot, Map<String, List<String>> memo,
+                                             Map<String, String> reverseMap, List<String> PESTS) {
+        if (currentNode.equals(ROOT)) {
+            return Optional.of(List.of(ROOT));
+        }
+
+        if (memo.containsKey(currentNode)) {
+            return Optional.of(new ArrayList<>(memo.get(currentNode)));
+        }
+
+        if (PESTS.contains(currentNode)) {
+            return Optional.empty();
+        }
+
+        List<String> path = new ArrayList<>(pathToRoot);
+        path.addFirst(currentNode);
+        path.addAll(0, computePathToRootAsListFrom(reverseMap.get(currentNode), pathToRoot, memo, reverseMap));
+        memo.put(currentNode, path);
+        return Optional.of(path);
+    }
+
     public String part2(String input) {
         List<String> lines = StringUtils.splitInput(input);
         Map<String, String> reverseMap = new HashMap<>();
@@ -133,7 +154,54 @@ public class Quest6 extends QuestString {
     }
 
     public String part3(String input) {
+        final List<String> PESTS = List.of("BUG", "ANT");
         List<String> lines = StringUtils.splitInput(input);
-        return "";
+        Map<String, String> reverseMap = new HashMap<>();
+        Set<String> fruitSources = new HashSet<>();
+        for (String line : lines) {
+            String[] parts = line.split(":");
+            String source = parts[0];
+            String[] destinations = parts[1].trim().split(",");
+            for (String destination : destinations) {
+                if (destination.equals(FRUIT)) {
+                    fruitSources.add(source);
+                } else {
+                    reverseMap.put(destination, source);
+                }
+            }
+        }
+        System.out.println("reverseMap: " + reverseMap);
+        System.out.println("fruitSources: " + fruitSources);
+        Map<String, List<String>> memo = new HashMap<>();
+        List<List<String>> pathsToRoot = new ArrayList<>();
+        Map<Integer, Integer> fruitPathDistanceFreqMap = new HashMap<>();
+        for (String fruitSource : fruitSources) {
+            final Optional<List<String>> foundPath = computePathToRootAsListAvoidingPestsFrom(fruitSource, new ArrayList<>(), memo, reverseMap, PESTS);
+            if (foundPath.isEmpty()) {
+                continue;
+            }
+            List<String> path = new ArrayList<>(foundPath.get());
+            path.add(FRUIT);
+            pathsToRoot.add(path);
+            fruitPathDistanceFreqMap.put(path.size(),
+                    fruitPathDistanceFreqMap.getOrDefault(path.size(), 0) + 1);
+        }
+        System.out.println("pathsToRoot: " + pathsToRoot);
+        System.out.println("fruitPathDistanceFreqMap: " + fruitPathDistanceFreqMap);
+        System.out.println("memo: " + memo);
+        int targetLength =
+                fruitPathDistanceFreqMap.entrySet().stream().min(Comparator.comparingInt(Map.Entry::getValue))
+                        .map(Map.Entry::getKey).orElse(0);
+        System.out.println("targetLength: " + targetLength);
+        String ans = "";
+        // it was decided that each tree would maintain exactly one path to a fruit with a unique length.
+        // i.e. there is only one path with a unique length; all others are repeated
+        for (List<String> path : pathsToRoot) {
+            if (path.size() == targetLength) {
+                ans = path.stream().map(e -> e.substring(0, 1)).collect(Collectors.joining());
+                break;
+            }
+        }
+        return ans;
     }
 }

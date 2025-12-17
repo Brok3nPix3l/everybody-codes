@@ -44,7 +44,16 @@ class Quest6Test {
 
     @Test
     void part3Test() {
-        Assertions.assertEquals("", questString.part3("""
+        Assertions.assertEquals("RB@", questString.part3("""
+                RR:A,B,C
+                A:D,E
+                B:F,@
+                C:G,H
+                D:@
+                E:@
+                F:@
+                G:@
+                H:@
                 """));
     }
 }
