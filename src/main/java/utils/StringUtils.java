@@ -7,4 +7,8 @@ public class StringUtils {
     public static List<String> splitInput(String input) {
         return Arrays.stream(input.split("\n")).toList();
     }
+
+    public static String concatenateInputs(List<String> inputs) {
+        return String.join("\n\n", inputs);
+    }
 }

@@ -3,6 +3,9 @@ package e2024.quests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import utils.StringUtils;
+
+import java.util.List;
 
 class Quest7Test {
     static QuestString questString;
@@ -24,8 +27,15 @@ class Quest7Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals("", questString.part2("""
-                """));
+        Assertions.assertEquals("DCBA", questString.part2(StringUtils.concatenateInputs(List.of("""
+                A:+,-,=,=
+                B:+,=,-,+
+                C:=,-,+,+
+                D:=,=,=,+""",
+                """
+                S+===
+                -   +
+                =+=-+"""))));
     }
 
     @Test
