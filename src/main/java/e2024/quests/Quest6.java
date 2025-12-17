@@ -75,15 +75,14 @@ public class Quest6 extends QuestString {
         }
 
         if (memo.containsKey(currentNode)) {
-            List<String> path = new ArrayList<>(memo.get(currentNode));
-            path.add(currentNode);
-            return path;
+            return new ArrayList<>(memo.get(currentNode));
         }
 
-        pathToRoot.addFirst(currentNode);
-        pathToRoot.addAll(0, computePathToRootAsListFrom(reverseMap.get(currentNode), pathToRoot, memo, reverseMap));
-        memo.put(currentNode, pathToRoot);
-        return pathToRoot;
+        List<String> path = new ArrayList<>(pathToRoot);
+        path.addFirst(currentNode);
+        path.addAll(0, computePathToRootAsListFrom(reverseMap.get(currentNode), pathToRoot, memo, reverseMap));
+        memo.put(currentNode, path);
+        return path;
     }
 
     public String part2(String input) {
@@ -93,7 +92,7 @@ public class Quest6 extends QuestString {
         for (String line : lines) {
             String[] parts = line.split(":");
             String source = parts[0];
-            String[] destinations = parts[1].split(",");
+            String[] destinations = parts[1].trim().split(",");
             for (String destination : destinations) {
                 if (destination.equals(FRUIT)) {
                     fruitSources.add(source);
@@ -102,14 +101,13 @@ public class Quest6 extends QuestString {
                 }
             }
         }
-        // System.out.println("reverseMap: " + reverseMap);
-        // System.out.println("fruitSources: " + fruitSources);
+         System.out.println("reverseMap: " + reverseMap);
+         System.out.println("fruitSources: " + fruitSources);
         Map<String, List<String>> memo = new HashMap<>();
         List<List<String>> pathsToRoot = new ArrayList<>();
         Map<Integer, Integer> fruitPathDistanceFreqMap = new HashMap<>();
         for (String fruitSource : fruitSources) {
-            List<String> path = new ArrayList<>();
-            computePathToRootAsListFrom(fruitSource, path, memo, reverseMap);
+            List<String> path = new ArrayList<>(computePathToRootAsListFrom(fruitSource, new ArrayList<>(), memo, reverseMap));
             path.add(FRUIT);
             pathsToRoot.add(path);
             fruitPathDistanceFreqMap.put(path.size(),
@@ -123,6 +121,8 @@ public class Quest6 extends QuestString {
                         .map(Map.Entry::getKey).orElse(0);
         System.out.println("targetLength: " + targetLength);
         String ans = "";
+        // it was decided that each tree would maintain exactly one path to a fruit with a unique length.
+        // i.e. there is only one path with a unique length; all others are repeated
         for (List<String> path : pathsToRoot) {
             if (path.size() == targetLength) {
                 ans = path.stream().map(e -> e.substring(0, 1)).collect(Collectors.joining());

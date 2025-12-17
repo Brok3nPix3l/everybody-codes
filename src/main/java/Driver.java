@@ -12,18 +12,28 @@ import java.util.*;
 public class Driver {
     public static void main(String[] args) throws ClassNotFoundException {
         Properties properties = parseArgs(args);
+        List<String> errors = new ArrayList<>();
+        int year = -1;
+        int questNumber = -1;
+        String part = "";
         if (!properties.containsKey("year")) {
-            throw new RuntimeException("year is required");
+            errors.add("year is required");
+        } else {
+            year = Integer.parseInt(properties.getProperty("year"));
         }
-        int year = Integer.parseInt(properties.getProperty("year"));
         if (!properties.containsKey("questNumber")) {
-            throw new RuntimeException("questNumber is required");
+            errors.add("questNumber is required");
+        } else {
+            questNumber = Integer.parseInt(properties.getProperty("questNumber"));
         }
-        int questNumber = Integer.parseInt(properties.getProperty("questNumber"));
         if (!properties.containsKey("part")) {
-            throw new RuntimeException("part is required");
+            errors.add("part is required");
+        } else {
+            part = properties.getProperty("part");
         }
-        String part = properties.getProperty("part");
+        if (!errors.isEmpty()) {
+            throw new RuntimeException(errors.toString());
+        }
         String fileSuffix = Optional.ofNullable(properties.getProperty("fileSuffix")).orElse("");
         boolean profile = Boolean.parseBoolean(properties.getProperty("profile"));
 

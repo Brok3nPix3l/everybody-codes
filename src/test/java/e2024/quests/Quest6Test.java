@@ -44,7 +44,7 @@ class Quest6Test {
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, questString.part3("""
+        Assertions.assertEquals("", questString.part3("""
                 """));
     }
 }
