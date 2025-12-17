@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Quest2 extends Quest {
+public class Quest2 extends QuestLong {
 
     @Override
     public long part1(String input) {

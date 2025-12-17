@@ -4,7 +4,7 @@ import utils.StringUtils;
 
 import java.util.*;
 
-public class Quest3 extends Quest {
+public class Quest3 extends QuestLong {
     private static final char SAFE = '#';
 
     @Override

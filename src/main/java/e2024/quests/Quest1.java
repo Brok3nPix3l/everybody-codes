@@ -2,7 +2,7 @@ package e2024.quests;
 
 import java.util.List;
 
-public class Quest1 extends Quest {
+public class Quest1 extends QuestLong {
 
     @Override
     public long part1(String input) {

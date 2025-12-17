@@ -1,12 +1,10 @@
 package e2024.quests;
 
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Scanner;
-import e2024.quests.Quest;
+
 import utils.StringUtils;
 
-public class QuestTemplate extends Quest {
+public class QuestLongTemplate extends QuestLong {
 
     @Override
     public long part1(String input) {

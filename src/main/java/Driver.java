@@ -23,23 +23,23 @@ public class Driver {
         if (!properties.containsKey("part")) {
             throw new RuntimeException("part is required");
         }
-        int part = Integer.parseInt(properties.getProperty("part"));
+        String part = properties.getProperty("part");
         String fileSuffix = Optional.ofNullable(properties.getProperty("fileSuffix")).orElse("");
         boolean profile = Boolean.parseBoolean(properties.getProperty("profile"));
 
         Quest quest;
         try {
             String className = "e2024.quests.Quest" + questNumber;
-            Class<?> dayClass = Class.forName(className);
+            Class<?> questClass = Class.forName(className);
             Constructor<?> constructor;
             try {
-                constructor = dayClass.getConstructor();
+                constructor = questClass.getConstructor();
             } catch (NoSuchMethodException ex) {
                 throw new RuntimeException(ex);
             }
             quest = (Quest) constructor.newInstance();
             Path filePath = Path.of(String.format("e%s", year), "quests",
-                    String.format("everybody_codes_e%d_q%02d_p%d%s.txt", year, questNumber, part, fileSuffix));
+                    String.format("everybody_codes_e%d_q%02d_p%s%s.txt", year, questNumber, part, fileSuffix));
             String input;
             try (InputStream inputstream = Driver.class.getResourceAsStream(
                     filePath.toString().replace("\\", "/"))) {
@@ -62,7 +62,7 @@ public class Driver {
         }
     }
 
-    private static void runMethod(String input, Quest quest, int part)
+    private static void runMethod(String input, Quest quest, String part)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Method partMethod = quest.getClass().getMethod("part" + part, String.class);
         System.out.println(partMethod.invoke(quest, input));

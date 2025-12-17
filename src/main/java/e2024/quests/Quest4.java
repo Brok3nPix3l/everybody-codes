@@ -4,7 +4,7 @@ import utils.StringUtils;
 
 import java.util.List;
 
-public class Quest4 extends Quest {
+public class Quest4 extends QuestLong {
 
     @Override
     public long part1(String input) {

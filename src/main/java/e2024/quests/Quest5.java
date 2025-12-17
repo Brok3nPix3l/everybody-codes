@@ -4,7 +4,7 @@ import utils.StringUtils;
 
 import java.util.*;
 
-public class Quest5 extends Quest {
+public class Quest5 extends QuestLong {
 
     public long performRounds(String input, int roundCount) {
         List<String> lines = StringUtils.splitInput(input);
