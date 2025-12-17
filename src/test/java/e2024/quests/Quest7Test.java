@@ -38,9 +38,9 @@ class Quest7Test {
                 =+=-+"""))));
     }
 
-    @Test
-    void part3Test() {
-        Assertions.assertEquals("", questString.part3("""
-                """));
-    }
+//    @Test
+//    void part3Test() {
+//        Assertions.assertEquals("", questString.part3("""
+//                """));
+//    }
 }

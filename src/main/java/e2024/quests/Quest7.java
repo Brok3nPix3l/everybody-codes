@@ -119,7 +119,70 @@ public class Quest7 extends QuestString {
 
     @Override
     public String part3(String input) {
+        final String START = "S";
         List<String> lines = StringUtils.splitInput(input);
-        return "";
+        Map<String, Integer> actionPlanTotalEssenceGathered = new HashMap<>();
+        Map<String, List<String>> actionPlans = generateActionPlans();
+        List<String> track = extractTrack(lines);
+        for (Map.Entry<String, List<String>> actionPlan : actionPlans.entrySet()) {
+            int totalEssenceGathered = 0;
+            int currentPower = 10;
+            int currentAction = 0;
+            int currentLapCount = 0;
+            int currentTrackIndex = 1;
+            List<String> actions = actionPlan.getValue();
+            while (currentLapCount < 2024) {
+                if (track.get(currentTrackIndex).equals(START)) {
+                    currentLapCount++;
+                }
+                switch (track.get(currentTrackIndex)) {
+                    case "+":
+                        currentPower++;
+                        break;
+                    case "-":
+                        currentPower = Math.max(currentPower - 1, 0);
+                        break;
+                    default:
+                        switch (actions.get(currentAction)) {
+                            case "+":
+                                currentPower++;
+                                break;
+                            case "-":
+                                currentPower = Math.max(currentPower - 1, 0);
+                                break;
+                        }
+                }
+                totalEssenceGathered += currentPower;
+                currentAction = (currentAction + 1) % actions.size();
+                currentTrackIndex = (currentTrackIndex + 1) % track.size();
+            }
+            actionPlanTotalEssenceGathered.put(actionPlan.getKey(), totalEssenceGathered);
+        }
+        int maxEssenceGathered = actionPlanTotalEssenceGathered.values().stream().max(Comparator.comparingInt(i -> i)).orElse(-1);
+        long winningActionPlanCount = actionPlanTotalEssenceGathered.values().stream().filter(i -> i == maxEssenceGathered).count();
+        return String.valueOf(winningActionPlanCount);
+    }
+
+    // Each knight must make their action plan, making sure it is precisely 11 actions long, consisting of:
+    // 5 actions of  +
+    // 3 actions of  -
+    // and the remaining 3 as  =
+    private Map<String, List<String>> generateActionPlans() {
+
+    }
+
+    // example:
+    // S+= +=-== +=++=     =+=+=--=    =-= ++=     +=-  =+=++=-+==+ =++=-=-=--
+    // - + +   + =   =     =      =   == = - -     - =  =         =-=        -
+    // = + + +-- =-= ==-==-= --++ +  == == = +     - =  =    ==++=    =++=-=++
+    // + + + =     +         =  + + == == ++ =     = =  ==   =   = =++=
+    // = = + + +== +==     =++ == =+=  =  +  +==-=++ =   =++ --= + =
+    // + ==- = + =   = =+= =   =       ++--          +     =   = = =--= ==++==
+    // =     ==- ==+-- = = = ++= +=--      ==+ ==--= +--+=-= ==- ==   =+=    =
+    // -               = = = =   +  +  ==+ = = +   =        ++    =          -
+    // -               = + + =   +  -  = + = = +   =        +     =          -
+    // --==++++==+=+++-= =-= =-+-=  =+-= =-= =--   +=++=+++==     -=+=++==+++-
+    private List<String> extractTrack(List<String> strings) {
+
     }
 }
