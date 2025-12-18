@@ -5,7 +5,7 @@ import java.util.List;
 
 public class StringUtils {
     public static List<String> splitInput(String input) {
-        return Arrays.stream(input.split("\n")).toList();
+        return Arrays.stream(input.split("\n")).map(s -> s.replaceAll("[\r\n]+$", "")).toList();
     }
 
     public static String concatenateInputs(List<String> inputs) {
