@@ -35,11 +35,27 @@ public class Quest8 extends QuestLong {
         return (long) blocksRequired * width;
     }
 
+    // Multiply the thickness of the previous layer by the current number of priests of Nullpointer: ( your notes ).
+    // Take the remainder of dividing the result by the number of current priest acolytes: 1111.
+    // You have the thickness of the subsequent layer ready to use.
     @Override
     public long part2(String input) {
-        long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
-        return ans;
+        int priests = Integer.parseInt(lines.getFirst());
+        int acolytes = Integer.parseInt(lines.get(1));
+        int blocks = Integer.parseInt(lines.get(2));
+//        System.out.println("Priests: " + priests + " acolytes: " + acolytes + " blocks: " + blocks);
+        int totalBlocksUsed = 1;
+        int width = 1;
+        int newRowThickness = 1;
+        while (totalBlocksUsed < blocks) {
+            width += 2;
+            newRowThickness = newRowThickness * priests % acolytes;
+            totalBlocksUsed += width * newRowThickness;
+//            System.out.println("width: " + width + " thickness: " + newRowThickness + " blocks used: " + totalBlocksUsed);
+        }
+        int blocksRequired = totalBlocksUsed - blocks;
+        return (long) blocksRequired * width;
     }
 
     @Override
