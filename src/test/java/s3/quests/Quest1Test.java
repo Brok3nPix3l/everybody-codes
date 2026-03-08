@@ -24,7 +24,11 @@ class Quest1Test {
 
     @Test
     void part2Test() {
-        Assertions.assertEquals(0, questLong.part2("""
+        Assertions.assertEquals(2456, questLong.part2("""
+                2456:rrrrrr ggGgGG bbbbBB sSsSsS
+                7689:rrRrrr ggGggg bbbBBB ssSSss
+                3145:rrRrRr gggGgg bbbbBB sSsSsS
+                6710:rrrRRr ggGGGg bbBBbB ssSSss
                 """));
     }
 
