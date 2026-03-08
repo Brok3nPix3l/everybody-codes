@@ -14,17 +14,23 @@ public class Driver {
         Properties properties = parseArgs(args);
         List<String> errors = new ArrayList<>();
         int year = -1;
-        int questNumber = -1;
+        String type = null;
+        int day = -1;
         String part = "";
         if (!properties.containsKey("year")) {
             errors.add("year is required");
         } else {
             year = Integer.parseInt(properties.getProperty("year"));
         }
-        if (!properties.containsKey("questNumber")) {
-            errors.add("questNumber is required");
+        if (!properties.containsKey("type")) {
+            errors.add("type is required");
         } else {
-            questNumber = Integer.parseInt(properties.getProperty("questNumber"));
+            type = properties.getProperty("type");
+        }
+        if (!properties.containsKey("day")) {
+            errors.add("day is required");
+        } else {
+            day = Integer.parseInt(properties.getProperty("day"));
         }
         if (!properties.containsKey("part")) {
             errors.add("part is required");
@@ -39,7 +45,8 @@ public class Driver {
 
         Quest quest;
         try {
-            String className = "e2024.quests.Quest" + questNumber;
+            String typeAndYear = type + year;
+            String className = typeAndYear + ".quests.Quest" + day;
             Class<?> questClass = Class.forName(className);
             Constructor<?> constructor;
             try {
@@ -48,8 +55,8 @@ public class Driver {
                 throw new RuntimeException(ex);
             }
             quest = (Quest) constructor.newInstance();
-            Path filePath = Path.of(String.format("e%s", year), "quests",
-                    String.format("everybody_codes_e%d_q%02d_p%s%s.txt", year, questNumber, part, fileSuffix));
+            Path filePath = Path.of(String.format("%s%s", type, year), "quests",
+                    String.format("everybody_codes_e%d_q%02d_p%s%s.txt", year, day, part, fileSuffix));
             String input;
             try (InputStream inputstream = Driver.class.getResourceAsStream(
                     filePath.toString().replace("\\", "/"))) {

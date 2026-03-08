@@ -28,7 +28,9 @@ class Quest8Test {
 
     @Test
     void part3Test() {
-        Assertions.assertEquals(0, questLong.part3("""
-                """));
+        Assertions.assertEquals(2, questLong.part3("""
+                2
+                5
+                160"""));
     }
 }
