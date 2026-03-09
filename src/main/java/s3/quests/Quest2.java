@@ -79,8 +79,10 @@ public class Quest2 extends QuestLong {
     @Override
     public long part2(String input) {
         List<String> lines = StringUtils.splitInput(input);
-        final int HEIGHT = lines.size();
-        final int WIDTH = lines.getFirst().length();
+        int minHeight = 0;
+        int maxHeight = lines.size();
+        int minWidth = 0;
+        int maxWidth = lines.getFirst().length();
         Map<List<Integer>, Character> grid = new HashMap<>();
         List<Integer> curPos = findChar(HEAD, lines);
         grid.put(curPos, HEAD);
@@ -88,28 +90,32 @@ public class Quest2 extends QuestLong {
         grid.put(vocalBone, VOCAL_BONE);
         int curDirection = 0;
         int steps = 0;
-        while (!isSurrounded(vocalBone, grid, WIDTH, HEIGHT)) {
+        while (!isSurrounded(vocalBone, grid, minWidth, maxWidth, minHeight, maxHeight)) {
             List<Integer> direction = DIRECTIONS.get(curDirection);
-            List<Integer> targetPos = List.of((curPos.getFirst() + direction.getFirst()) % WIDTH, (curPos.getLast() + direction.getLast()) % HEIGHT);
+            List<Integer> targetPos = List.of((curPos.getFirst() + direction.getFirst()), (curPos.getLast() + direction.getLast()));
             while (!attemptMoveToPosAndRespectVocalBone(targetPos, grid)) {
                 curDirection = (curDirection + 1) % DIRECTIONS.size();
                 direction = DIRECTIONS.get(curDirection);
-                targetPos = List.of((curPos.getFirst() + direction.getFirst()) % WIDTH, (curPos.getLast() + direction.getLast()) % HEIGHT);
+                targetPos = List.of((curPos.getFirst() + direction.getFirst()), (curPos.getLast() + direction.getLast()));
             }
             curDirection = (curDirection + 1) % DIRECTIONS.size();
             grid.put(curPos, TAIL);
             curPos = targetPos;
             steps++;
-            fillSurroundedAdjacentCells(grid, curPos, WIDTH, HEIGHT);
-            printGrid(grid, HEIGHT, WIDTH, steps);
+            minHeight = grid.keySet().stream().map(List::getFirst).min(Integer::compareTo).get() - 1;
+            maxHeight = grid.keySet().stream().map(List::getFirst).max(Integer::compareTo).get() + 2;
+            minWidth = grid.keySet().stream().map(List::getLast).min(Integer::compareTo).get() - 1;
+            maxWidth = grid.keySet().stream().map(List::getLast).max(Integer::compareTo).get() + 2;
+            fillSurroundedAdjacentCells(grid, curPos, minWidth, maxWidth, minHeight, maxHeight);
+//            printGrid(grid, minHeight, maxHeight, minWidth, maxWidth, steps);
         }
         return steps;
     }
 
-    private void fillSurroundedAdjacentCells(Map<List<Integer>, Character> grid, List<Integer> curPos, int width, int height) {
+    private void fillSurroundedAdjacentCells(Map<List<Integer>, Character> grid, List<Integer> curPos, int minWidth, int maxWidth, int minHeight, int maxHeight) {
         List<List<Integer>> adjacentCells = DIRECTIONS.stream().map(direction -> List.of(curPos.getFirst() + direction.getFirst(), curPos.getLast() + direction.getLast())).toList();
         adjacentCells.forEach(cell -> {
-            List<List<Integer>> surroundedArea = getSurroundedArea(cell, grid, width, height);
+            List<List<Integer>> surroundedArea = getSurroundedArea(cell, grid, minWidth, maxWidth, minHeight, maxHeight);
             if (surroundedArea.isEmpty()) {
                 return;
             }
@@ -117,10 +123,10 @@ public class Quest2 extends QuestLong {
         });
     }
 
-    private void printGrid(Map<List<Integer>, Character> grid, int height, int width, int step) {
+    private void printGrid(Map<List<Integer>, Character> grid, int minHeight, int maxHeight, int minWidth, int maxWidth, int step) {
         System.out.println("Step: " + step);
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = minHeight; i < maxHeight; i++) {
+            for (int j = minWidth; j < maxWidth; j++) {
                 System.out.print(grid.getOrDefault(List.of(i, j), EMPTY));
             }
             System.out.println();
@@ -128,14 +134,14 @@ public class Quest2 extends QuestLong {
         System.out.println();
     }
 
-    private boolean isSurrounded(List<Integer> cell, Map<List<Integer>, Character> grid, int width,
-                                 int height) {
+    private boolean isSurrounded(List<Integer> cell, Map<List<Integer>, Character> grid, int minWidth, int maxWidth,
+                                 int minHeight, int maxHeight) {
         List<List<Integer>> visited = new ArrayList<>();
         Queue<List<Integer>> queue = new LinkedList<>();
         queue.add(cell);
         while (!queue.isEmpty()) {
             List<Integer> cur = queue.poll();
-            if (cur.getFirst() == 0 || cur.getFirst() == width - 1 || cur.getLast() == 0 || cur.getLast() == height - 1) {
+            if (cur.getFirst() == minWidth || cur.getFirst() == maxWidth - 1 || cur.getLast() == minHeight || cur.getLast() == maxHeight - 1) {
                 return false;
             }
             if (visited.contains(cur)) {
@@ -152,17 +158,17 @@ public class Quest2 extends QuestLong {
         return true;
     }
 
-    private List<List<Integer>> getSurroundedArea(List<Integer> cell, Map<List<Integer>, Character> grid, int width,
-                                 int height) {
+    private List<List<Integer>> getSurroundedArea(List<Integer> cell, Map<List<Integer>, Character> grid, int minWidth, int maxWidth,
+                                 int minHeight, int maxHeight) {
         List<List<Integer>> visited = new ArrayList<>();
         Queue<List<Integer>> queue = new LinkedList<>();
         queue.add(cell);
         while (!queue.isEmpty()) {
             List<Integer> cur = queue.poll();
-            if (grid.containsKey(cur) && grid.get(cur) != VOCAL_BONE) {
+            if (grid.containsKey(cur)) {
                 continue;
             }
-            if (cur.getFirst() == 0 || cur.getFirst() == width - 1 || cur.getLast() == 0 || cur.getLast() == height - 1) {
+            if (cur.getFirst() == minWidth || cur.getFirst() == maxWidth - 1 || cur.getLast() == minHeight || cur.getLast() == maxHeight - 1) {
                 return List.of();
             }
             if (visited.contains(cur)) {
