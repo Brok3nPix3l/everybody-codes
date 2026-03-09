@@ -244,7 +244,7 @@ public class Quest2 extends QuestLong {
             minHeight = grid.keySet().stream().map(List::getLast).min(Integer::compareTo).get() - 1;
             maxHeight = grid.keySet().stream().map(List::getLast).max(Integer::compareTo).get() + 2;
             fillSurroundedAdjacentCells(grid, curPos, minWidth, maxWidth, minHeight, maxHeight);
-//            printGrid(grid, minHeight, maxHeight, minWidth, maxWidth, steps);
+            printGrid(grid, minHeight, maxHeight, minWidth, maxWidth, steps);
         }
         return steps;
     }

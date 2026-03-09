@@ -1,6 +1,5 @@
 package s3.quests;
 
-import e2024.quests.QuestLong;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
