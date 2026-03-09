@@ -10,10 +10,24 @@ public class Quest2 extends QuestLong {
     final char VOCAL_BONE = '#';
     final char EMPTY = '.';
     final List<List<Integer>> DIRECTIONS = List.of(
-            List.of(-1,0),
-            List.of(0,1),
+            List.of(0,-1),
             List.of(1,0),
-            List.of(0,-1)
+            List.of(0,1),
+            List.of(-1,0)
+    );
+    final List<List<Integer>> LONGER_DIRECTIONS = List.of(
+            List.of(0,-1),
+            List.of(0,-1),
+            List.of(0,-1),
+            List.of(1,0),
+            List.of(1,0),
+            List.of(1,0),
+            List.of(0,1),
+            List.of(0,1),
+            List.of(0,1),
+            List.of(-1,0),
+            List.of(-1,0),
+            List.of(-1,0)
     );
 
     @Override
@@ -67,9 +81,21 @@ public class Quest2 extends QuestLong {
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.get(i).length(); j++) {
                 if (lines.get(i).charAt(j) == target) {
-                    ans.add(i);
                     ans.add(j);
+                    ans.add(i);
                     break outer;
+                }
+            }
+        }
+        return ans;
+    }
+
+    private List<List<Integer>> findAllChar(char target, List<String> lines) {
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < lines.size(); i++) {
+            for (int j = 0; j < lines.get(i).length(); j++) {
+                if (lines.get(i).charAt(j) == target) {
+                    ans.add(List.of(j, i));
                 }
             }
         }
@@ -125,9 +151,9 @@ public class Quest2 extends QuestLong {
 
     private void printGrid(Map<List<Integer>, Character> grid, int minHeight, int maxHeight, int minWidth, int maxWidth, int step) {
         System.out.println("Step: " + step);
-        for (int i = minHeight; i < maxHeight; i++) {
-            for (int j = minWidth; j < maxWidth; j++) {
-                System.out.print(grid.getOrDefault(List.of(i, j), EMPTY));
+        for (int r = minHeight; r < maxHeight; r++) {
+            for (int c = minWidth; c < maxWidth; c++) {
+                System.out.print(grid.getOrDefault(List.of(c, r), EMPTY));
             }
             System.out.println();
         }
@@ -158,6 +184,11 @@ public class Quest2 extends QuestLong {
         return true;
     }
 
+    private boolean areSurrounded(List<List<Integer>> cells, Map<List<Integer>, Character> grid, int minWidth, int maxWidth,
+                                 int minHeight, int maxHeight) {
+        return cells.stream().allMatch(cell -> isSurrounded(cell, grid, minWidth, maxWidth, minHeight, maxHeight));
+    }
+
     private List<List<Integer>> getSurroundedArea(List<Integer> cell, Map<List<Integer>, Character> grid, int minWidth, int maxWidth,
                                  int minHeight, int maxHeight) {
         List<List<Integer>> visited = new ArrayList<>();
@@ -184,8 +215,37 @@ public class Quest2 extends QuestLong {
 
     @Override
     public long part3(String input) {
-        long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
-        return ans;
+        int minHeight = 0;
+        int maxHeight = lines.size();
+        int minWidth = 0;
+        int maxWidth = lines.getFirst().length();
+        Map<List<Integer>, Character> grid = new HashMap<>();
+        List<Integer> curPos = findChar(HEAD, lines);
+        grid.put(curPos, HEAD);
+        List<List<Integer>> vocalBones = findAllChar(VOCAL_BONE, lines);
+        vocalBones.forEach(vocalBone -> grid.put(vocalBone, VOCAL_BONE));
+        int curDirection = 0;
+        int steps = 0;
+        while (!areSurrounded(vocalBones, grid, minWidth, maxWidth, minHeight, maxHeight)) {
+            List<Integer> direction = LONGER_DIRECTIONS.get(curDirection);
+            List<Integer> targetPos = List.of((curPos.getFirst() + direction.getFirst()), (curPos.getLast() + direction.getLast()));
+            while (!attemptMoveToPosAndRespectVocalBone(targetPos, grid)) {
+                curDirection = (curDirection + 1) % LONGER_DIRECTIONS.size();
+                direction = LONGER_DIRECTIONS.get(curDirection);
+                targetPos = List.of((curPos.getFirst() + direction.getFirst()), (curPos.getLast() + direction.getLast()));
+            }
+            curDirection = (curDirection + 1) % LONGER_DIRECTIONS.size();
+            grid.put(curPos, TAIL);
+            curPos = targetPos;
+            steps++;
+            minWidth = grid.keySet().stream().map(List::getFirst).min(Integer::compareTo).get() - 1;
+            maxWidth = grid.keySet().stream().map(List::getFirst).max(Integer::compareTo).get() + 2;
+            minHeight = grid.keySet().stream().map(List::getLast).min(Integer::compareTo).get() - 1;
+            maxHeight = grid.keySet().stream().map(List::getLast).max(Integer::compareTo).get() + 2;
+            fillSurroundedAdjacentCells(grid, curPos, minWidth, maxWidth, minHeight, maxHeight);
+//            printGrid(grid, minHeight, maxHeight, minWidth, maxWidth, steps);
+        }
+        return steps;
     }
 }
