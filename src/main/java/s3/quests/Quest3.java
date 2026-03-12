@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 public class Quest3 extends QuestLong {
     private Node cur;
-//    private List<Node> nodes;
 
     @Override
     public long part1(String input) {
@@ -21,8 +20,6 @@ public class Quest3 extends QuestLong {
             cur = node;
             addCurToTree(head);
         }
-//        cur = nodes.removeFirst();
-//        buildTree(head);
         ans = generateChecksum(head);
         return ans;
     }
@@ -68,36 +65,6 @@ public class Quest3 extends QuestLong {
             inorder(head.right, values);
         }
     }
-
-//    private void buildTree(Node head) {
-//        while (cur != null) {
-//            if (head.left != null) {
-//                buildTree(head.left);
-//            } else if (Objects.equals(cur.plug, head.leftSocket)) {
-//                head.left = cur;
-//                cur.parent = head;
-//                if (nodes.isEmpty()) {
-//                    cur = null;
-//                    break;
-//                }
-//                cur = nodes.removeFirst();
-//            }
-//            if (head.right != null) {
-//                buildTree(head.right);
-//            } else if (Objects.equals(cur.plug, head.rightSocket)) {
-//                head.right = cur;
-//                cur.parent = head;
-//                if (nodes.isEmpty()) {
-//                    cur = null;
-//                    break;
-//                }
-//                cur = nodes.removeFirst();
-//            }
-//            if (head.parent != null) {
-//                break;
-//            }
-//        }
-//    }
 
     @Override
     public long part2(String input) {
