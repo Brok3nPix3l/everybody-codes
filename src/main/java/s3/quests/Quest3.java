@@ -9,21 +9,44 @@ import java.util.stream.Collectors;
 
 public class Quest3 extends QuestLong {
     private Node cur;
-    private List<Node> nodes;
+//    private List<Node> nodes;
 
     @Override
     public long part1(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
-        nodes = lines.stream().map(Node::fromLine).collect(Collectors.toList());
+        List<Node> nodes = lines.stream().map(Node::fromLine).collect(Collectors.toList());
         Node head = nodes.removeFirst();
-        cur = nodes.removeFirst();
-        buildTree(head);
-        while (head.parent != null) {
-            head = head.parent;
+        for (Node node : nodes) {
+            cur = node;
+            addCurToTree(head);
         }
+//        cur = nodes.removeFirst();
+//        buildTree(head);
         ans = generateChecksum(head);
         return ans;
+    }
+
+    private void addCurToTree(Node head) {
+        if (head.left != null) {
+            addCurToTree(head.left);
+        } else if (Objects.equals(head.leftSocket, cur.plug)) {
+            head.left = cur;
+            cur.parent = head;
+            cur = null;
+            return;
+        }
+        if (cur == null) {
+            return;
+        }
+        if (head.right != null) {
+            addCurToTree(head.right);
+        } else if (Objects.equals(head.rightSocket, cur.plug)) {
+            head.right = cur;
+            cur.parent = head;
+            cur = null;
+            return;
+        }
     }
 
     private long generateChecksum(Node head) {
@@ -37,9 +60,6 @@ public class Quest3 extends QuestLong {
     }
 
     private void inorder(Node head, List<Integer> values) {
-        if (head == null) {
-            return;
-        }
         if (head.left != null) {
             inorder(head.left, values);
         }
@@ -49,35 +69,35 @@ public class Quest3 extends QuestLong {
         }
     }
 
-    private void buildTree(Node head) {
-        while (cur != null) {
-            if (head.left != null) {
-                buildTree(head.left);
-            } else if (Objects.equals(cur.plug, head.leftSocket)) {
-                head.left = cur;
-                cur.parent = head;
-                if (nodes.isEmpty()) {
-                    cur = null;
-                    break;
-                }
-                cur = nodes.removeFirst();
-            }
-            if (head.right != null) {
-                buildTree(head.right);
-            } else if (Objects.equals(cur.plug, head.rightSocket)) {
-                head.right = cur;
-                cur.parent = head;
-                if (nodes.isEmpty()) {
-                    cur = null;
-                    break;
-                }
-                cur = nodes.removeFirst();
-            }
-            if (head.parent != null) {
-                break;
-            }
-        }
-    }
+//    private void buildTree(Node head) {
+//        while (cur != null) {
+//            if (head.left != null) {
+//                buildTree(head.left);
+//            } else if (Objects.equals(cur.plug, head.leftSocket)) {
+//                head.left = cur;
+//                cur.parent = head;
+//                if (nodes.isEmpty()) {
+//                    cur = null;
+//                    break;
+//                }
+//                cur = nodes.removeFirst();
+//            }
+//            if (head.right != null) {
+//                buildTree(head.right);
+//            } else if (Objects.equals(cur.plug, head.rightSocket)) {
+//                head.right = cur;
+//                cur.parent = head;
+//                if (nodes.isEmpty()) {
+//                    cur = null;
+//                    break;
+//                }
+//                cur = nodes.removeFirst();
+//            }
+//            if (head.parent != null) {
+//                break;
+//            }
+//        }
+//    }
 
     @Override
     public long part2(String input) {
