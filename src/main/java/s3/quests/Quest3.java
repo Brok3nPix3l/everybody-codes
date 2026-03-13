@@ -25,9 +25,13 @@ public class Quest3 extends QuestLong {
     }
 
     private void addCurToTree(Node head) {
+        addCurToTree(head, false);
+    }
+
+    private void addCurToTree(Node head, boolean allowWeakBonds) {
         if (head.left != null) {
-            addCurToTree(head.left);
-        } else if (Objects.equals(head.leftSocket, cur.plug)) {
+            addCurToTree(head.left, allowWeakBonds);
+        } else if (isStrongBond(head.leftSocket, cur.plug) || allowWeakBonds && isWeakBond(head.leftSocket, cur.plug)) {
             head.left = cur;
             cur.parent = head;
             cur = null;
@@ -37,13 +41,23 @@ public class Quest3 extends QuestLong {
             return;
         }
         if (head.right != null) {
-            addCurToTree(head.right);
-        } else if (Objects.equals(head.rightSocket, cur.plug)) {
+            addCurToTree(head.right, allowWeakBonds);
+        } else if (isStrongBond(head.rightSocket, cur.plug) || allowWeakBonds && isWeakBond(head.rightSocket, cur.plug)) {
             head.right = cur;
             cur.parent = head;
             cur = null;
             return;
         }
+    }
+
+    private boolean isStrongBond(String s1, String s2) {
+        return Objects.equals(s1, s2);
+    }
+
+    private boolean isWeakBond(String s1, String s2) {
+        String[] s1Split = s1.split(" ", 2);
+        String[] s2Split = s2.split(" ", 2);
+        return Objects.equals(s1Split[0], s2Split[0]) || Objects.equals(s1Split[1], s2Split[1]);
     }
 
     private long generateChecksum(Node head) {
@@ -70,6 +84,13 @@ public class Quest3 extends QuestLong {
     public long part2(String input) {
         long ans = 0L;
         List<String> lines = StringUtils.splitInput(input);
+        List<Node> nodes = lines.stream().map(Node::fromLine).collect(Collectors.toList());
+        Node head = nodes.removeFirst();
+        for (Node node : nodes) {
+            cur = node;
+            addCurToTree(head, true);
+        }
+        ans = generateChecksum(head);
         return ans;
     }
 
