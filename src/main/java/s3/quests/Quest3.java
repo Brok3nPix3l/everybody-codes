@@ -2,9 +2,7 @@ package s3.quests;
 
 import utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Quest3 extends QuestLong {
@@ -26,32 +24,29 @@ public class Quest3 extends QuestLong {
 
     private void addCurNodeToTree(Node head, BondPolicy policy) {
         do {
-            for (Side side : Side.values()) {
-                if (head.getFromSide(side) != null) {
-                    if (policy.strongReplacesWeak() && head.getBondTypeFromSide(side) == BondType.WEAK &&
-                            isStrongBond(head.getSocketFromSide(side), cur.plug)) {
-                        cur = head.connectToSide(cur, side, BondType.STRONG);
+            for (int i = 0; i < 2 && cur != null; i++) {
+                if (head.getChild(i) != null) {
+                    if (policy.strongReplacesWeak() && head.getBondType(i) == BondType.WEAK &&
+                            canFormStrongBond(head.getSocket(i), cur.plug)) {
+                        cur = head.connect(cur, i, BondType.STRONG);
                     } else {
-                        addCurNodeToTree(head.getFromSide(side), policy);
+                        addCurNodeToTree(head.getChild(i), policy);
                     }
-                } else if (isStrongBond(head.getSocketFromSide(side), cur.plug) ||
-                        policy.allowWeak() && isWeakBond(head.getSocketFromSide(side), cur.plug)) {
-                    cur = head.connectToSide(cur, side,
-                            isStrongBond(head.getSocketFromSide(side), cur.plug) ? BondType.STRONG : BondType.WEAK);
-                    return;
-                }
-                if (cur == null) {
+                } else if (canFormStrongBond(head.getSocket(i), cur.plug) ||
+                        policy.allowWeak() && canFormWeakBond(head.getSocket(i), cur.plug)) {
+                    cur = head.connect(cur, i,
+                            canFormStrongBond(head.getSocket(i), cur.plug) ? BondType.STRONG : BondType.WEAK);
                     return;
                 }
             }
         } while (head.parent == null && cur != null);
     }
 
-    private boolean isStrongBond(String s1, String s2) {
+    private boolean canFormStrongBond(String s1, String s2) {
         return Objects.equals(s1, s2);
     }
 
-    private boolean isWeakBond(String s1, String s2) {
+    private boolean canFormWeakBond(String s1, String s2) {
         String[] s1Split = s1.split(" ", 2);
         String[] s2Split = s2.split(" ", 2);
         return Objects.equals(s1Split[0], s2Split[0]) || Objects.equals(s1Split[1], s2Split[1]);
@@ -68,12 +63,12 @@ public class Quest3 extends QuestLong {
     }
 
     private void inorder(Node head, List<Integer> values) {
-        if (head.left != null) {
-            inorder(head.left, values);
+        if (head.getChild(0) != null) {
+            inorder(head.getChild(0), values);
         }
         values.add(head.id);
-        if (head.right != null) {
-            inorder(head.right, values);
+        if (head.getChild(1) != null) {
+            inorder(head.getChild(1), values);
         }
     }
 
@@ -155,19 +150,17 @@ public class Quest3 extends QuestLong {
     private static class Node {
         private final int id;
         private final String plug;
-        private final String leftSocket;
-        private final String rightSocket;
-        private Node left;
-        private Node right;
+        private final String[] sockets;
+        private final Map<Integer,Node> children;
         private Node parent;
-        private BondType leftBondType;
-        private BondType rightBondType;
+        private final Map<Integer,BondType> bondTypes;
 
-        public Node(int id, String plug, String leftSocket, String rightSocket) {
+        public Node(int id, String plug, String[] sockets) {
             this.id = id;
             this.plug = plug;
-            this.leftSocket = leftSocket;
-            this.rightSocket = rightSocket;
+            this.sockets = sockets;
+            this.children = new HashMap<>();
+            this.bondTypes = new HashMap<>();
         }
 
         public static Node fromLine(String line) {
@@ -176,54 +169,27 @@ public class Quest3 extends QuestLong {
             String plug = split[1].split("=", 2)[1];
             String leftSocket = split[2].split("=", 2)[1];
             String rightSocket = split[3].split("=", 2)[1];
-            return new Node(id, plug, leftSocket, rightSocket);
+            return new Node(id, plug, new String[]{leftSocket, rightSocket});
         }
 
-        public Node connectToSide(Node newNode, Side side, BondType bondType) {
-            if (side == Side.LEFT) {
-                Node temp = left;
-                left = newNode;
-                leftBondType = bondType;
-                newNode.parent = this;
-                return temp;
-            } else if (side == Side.RIGHT) {
-                Node temp = right;
-                right = newNode;
-                newNode.parent = this;
-                rightBondType = bondType;
-                return temp;
-            }
-            throw new RuntimeException("Unexpected side: " + side.toString());
+        public Node connect(Node newNode, int index, BondType bondType) {
+            Node temp = children.getOrDefault(index, null);
+            children.put(index, newNode);
+            bondTypes.put(index, bondType);
+            newNode.parent = this;
+            return temp;
         }
 
-        public Node getFromSide(Side side) {
-            if (side == Side.LEFT) {
-                return left;
-            } else if (side == Side.RIGHT) {
-                return right;
-            } else {
-                throw new RuntimeException("Unexpected side: " + side.toString());
-            }
+        public Node getChild(int index) {
+            return children.getOrDefault(index, null);
         }
 
-        public BondType getBondTypeFromSide(Side side) {
-            if (side == Side.LEFT) {
-                return leftBondType;
-            } else if (side == Side.RIGHT) {
-                return rightBondType;
-            } else {
-                throw new RuntimeException("Unexpected side: " + side.toString());
-            }
+        public BondType getBondType(int index) {
+            return bondTypes.getOrDefault(index, null);
         }
 
-        public String getSocketFromSide(Side side) {
-            if (side == Side.LEFT) {
-                return leftSocket;
-            } else if (side == Side.RIGHT) {
-                return rightSocket;
-            } else {
-                throw new RuntimeException("Unexpected side: " + side.toString());
-            }
+        public String getSocket(int index) {
+            return sockets[index];
         }
 
         @Override
