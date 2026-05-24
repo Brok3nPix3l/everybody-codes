@@ -31,3 +31,36 @@ RUNNING_2 ______CP RUNNING_2 **PPPPP* LLLLLLLL
 RUNNING_2 ______DP RUNNING_2 PPPPPPP* LLLLLLLL
 RUNNING_2 _______P RUNNING_2 ******** LLLLLLLL
 RUNNING_2 ________ STOP      ******** SSSSSSSS
+
+// SETUP
+// Move head 2 down and other heads up:
+//
+// 8
+// 7
+// 6
+// 5
+// 4
+// 3
+// 1 INPUT LINE 1
+// 2 INPUT LINE 2
+// ---------------
+// ALGORITHM
+// Parse input lines in two phases
+// 1. Scan from left to right, marking A's as X's to be removed later and placing required potions above input
+// 2. Slide heads down:
+//
+// INPUT LINE 1 8
+// INPUT LINE 2 7
+//              6
+//              5
+//              4
+//              3
+//              2
+//              1
+//
+// 3. Scan from right to left, removing X's from top row and placing required potions below input
+//   - Since this is the second row, we add +2 to each required potion count, including A's
+// ---------------
+// RESULTS
+// Heads: 8 | States: 1500 | Rules: 2366 | Steps: 6200
+// ---------------------------------------------------
