@@ -1,0 +1,12 @@
+HEADS AAAA
+
+START **** LTR **** SRDD
+LTR   *#__ LTR **** RRRR
+LTR   *=__ LTR *~** RRRR
+LTR   !___ RTL **** LLSL
+
+RTL ##__ RTL  **** LLLL
+RTL ~#__ RTL  **** LLLL
+RTL ~~*_ RTL  ***~ LLLL
+RTL #~*_ RTL  **_* LLLL
+RTL _*__ STOP **** SSSS
